@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Троянський Кінь | Command Center</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Firebase SDK (Modular) -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo" style="gap: 16px;">
+                    <div class="logo-icon"
+                        style="background: var(--accent-gradient); color: white; border-radius: 50%; width: 36px; height: 36px; padding: 0; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4); border: 1px solid rgba(255,255,255,0.2);">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1 style="font-size: 18px; letter-spacing: 0.5px;">Троянський Кінь</h1>
+                        <span style="font-size: 11px;">Cold Outreach Ops</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="dashboard">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="9"></rect>
+                        <rect x="14" y="3" width="7" height="5"></rect>
+                        <rect x="14" y="12" width="7" height="9"></rect>
+                        <rect x="3" y="16" width="7" height="5"></rect>
+                    </svg>
+                    Дашборд
+                </button>
+                <button class="nav-item" data-tab="strategy">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                    Стратегія
+                </button>
+                <button class="nav-item" data-tab="scripts">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Скрипти
+                </button>
+                <button class="nav-item" data-tab="research">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <path d="M11 8v2"></path>
+                        <path d="M10 10h2"></path>
+                    </svg>
+                    Дослідження
+                </button>
+                <button class="nav-item" data-tab="roadmap">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                    Roadmap
+                </button>
+                <button class="nav-item" data-tab="leads">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Ліди
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item" data-tab="settings">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                    Налаштування
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h2 id="current-tab-title">Операційний Центр</h2>
+                <div class="topbar-actions">
+                    <div id="sync-status" class="sync-status status-offline">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Офлайн (Локально)</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="tab-content-wrapper">
+
+                <!-- TAB 1: DASHBOARD -->
+                <section id="tab-dashboard" class="tab-section active">
+                    <!-- Metrics Row -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">📩</span>
+                                <h3>DM відправлено</h3>
+                            </div>
+                            <div class="metric-body">
+                                <div class="metric-value" id="val-dms">0</div>
+                                <div class="metric-badge" id="badge-dms">Ціль: <span id="target-dms">80</span> <span
+                                        class="edit-target" data-target="dms" title="Змінити ціль"
+                                        style="cursor:pointer; margin-left:4px;">✏️</span></div>
+                            </div>
+                            <div class="metric-footer">
+                                <span>Всього за спринт</span>
+                                <div class="flex-align gap-2">
+                                    <button class="btn-icon btn-sub" data-metric="dms" title="Відняти 1"
+                                        style="font-size: 14px; width: 28px; height: 28px;">-1</button>
+                                    <button class="btn-icon btn-add" data-metric="dms" title="Додати 1">+1</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">🎬</span>
+                                <h3>Відео записано</h3>
+                            </div>
+                            <div class="metric-body">
+                                <div class="metric-value" id="val-videos">0</div>
+                                <div class="metric-badge" id="badge-videos">Ціль: <span id="target-videos">40</span>
+                                    <span class="edit-target" data-target="videos" title="Змінити ціль"
+                                        style="cursor:pointer; margin-left:4px;">✏️</span>
+                                </div>
+                            </div>
+                            <div class="metric-footer">
+                                <span>Всього за спринт</span>
+                                <div class="flex-align gap-2">
+                                    <button class="btn-icon btn-sub" data-metric="videos" title="Відняти 1"
+                                        style="font-size: 14px; width: 28px; height: 28px;">-1</button>
+                                    <button class="btn-icon btn-add" data-metric="videos" title="Додати 1">+1</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">💬</span>
+                                <h3>Відповідей</h3>
+                            </div>
+                            <div class="metric-body">
+                                <div class="metric-value" id="val-responses">0</div>
+                                <div class="metric-badge" id="badge-responses">Ціль: <span
+                                        id="target-responses">8</span> <span class="edit-target" data-target="responses"
+                                        title="Змінити ціль" style="cursor:pointer; margin-left:4px;">✏️</span></div>
+                            </div>
+                            <div class="metric-footer">
+                                <span id="response-rate">Conv: 0%</span>
+                                <div class="flex-align gap-2">
+                                    <button class="btn-icon btn-sub" data-metric="responses" title="Відняти 1"
+                                        style="font-size: 14px; width: 28px; height: 28px;">-1</button>
+                                    <button class="btn-icon btn-add" data-metric="responses"
+                                        title="Додати 1">+1</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">🤝</span>
+                                <h3>Угод закрито</h3>
+                            </div>
+                            <div class="metric-body">
+                                <div class="metric-value" id="val-deals">0</div>
+                                <div class="metric-badge success" id="badge-deals">Ціль: <span
+                                        id="target-deals">2</span> <span class="edit-target" data-target="deals"
+                                        title="Змінити ціль" style="cursor:pointer; margin-left:4px;">✏️</span></div>
+                            </div>
+                            <div class="metric-footer">
+                                <span id="close-rate">Conv: 0%</span>
+                                <div class="flex-align gap-2">
+                                    <button class="btn-icon btn-sub" data-metric="deals" title="Відняти 1"
+                                        style="font-size: 14px; width: 28px; height: 28px;">-1</button>
+                                    <button class="btn-icon btn-add" data-metric="deals" title="Додати 1">+1</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar Row -->
+                    <div class="panel mt-4">
+                        <div class="panel-header"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3>Прогрес спринту (DM)</h3>
+                                <span class="text-secondary" id="sprint-progress-text"
+                                    style="display: block; margin-top: 4px;">0 з <span id="sprint-target-dms">80</span>
+                                    лідів (0%)</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline text-danger" id="btn-reset-metrics"
+                                style="border-color: var(--danger); color: var(--danger);">🔁 Скинути метрики</button>
+                        </div>
+                        <div class="progress-track mt-2">
+                            <div class="progress-fill" id="sprint-progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 2 Columns Row -->
+                    <div class="grid-2-col mt-4">
+                        <!-- Left: Timer -->
+                        <div class="panel">
+                            <h3>Таймер спринту</h3>
+                            <div class="timer-display mt-3">
+                                <div class="timer-days">
+                                    <span id="days-passed">0</span>
+                                    <small>днів пройшло</small>
+                                </div>
+                                <div class="timer-divider">/</div>
+                                <div class="timer-days">
+                                    <span id="total-days">30</span>
+                                    <small>всього</small>
+                                </div>
+                            </div>
+                            <div class="progress-track mt-4">
+                                <div class="progress-fill bg-warning" id="time-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="flex-between mt-2 text-small text-secondary">
+                                <span id="date-start">Старт: --</span>
+                                <span id="date-end">Фініш: --</span>
+                            </div>
+                        </div>
+
+                        <!-- Right: Daily Checklist -->
+                        <div class="panel daily-panel">
+                            <div class="flex-between">
+                                <h3>📌 Сьогоднішній мінімум</h3>
+                                <span class="badge" id="daily-status">0/4</span>
+                            </div>
+                            <div class="checklist mt-4" id="daily-checklist">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-daily="videos">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">Записати 2 відео</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-daily="dms">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">Надіслати 3 DM</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-daily="followup">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">Зробити 1 фоллоу-ап</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-daily="leads">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">Знайти 5 нових лідів</span>
+                                </label>
+                            </div>
+                            <div class="daily-confetti" id="daily-confetti"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quote Row -->
+                    <div class="quote-panel mt-4">
+                        <p id="daily-quote">"Ваша ціль — не $500. Ваша ціль — один перший клієнт, який скаже «так»."</p>
+                    </div>
+                </section>
+
+                <!-- TAB 2: STRATEGY -->
+                <section id="tab-strategy" class="tab-section">
+                    <div class="flex-between mb-4">
+                        <h2>Сучасна Стратегія Операцій</h2>
+                        <button class="btn btn-sm btn-outline text-accent" id="btn-toggle-edit-strategy">✏️ Режим
+                            редагування</button>
+                    </div>
+
+                    <div class="callout callout-accent mb-4">
+                        <div class="callout-icon">💡</div>
+                        <div class="callout-content">
+                            <h4 data-editable="strat_principle_h4">ПРИНЦИП: Контролюй дії, а не результат.</h4>
+                            <p data-editable="strat_principle_p">Відправ 80 DM → Запиши 40 відео → Отримай 8 теплих →
+                                Закрий 2 угоди.<br>Гроші — наслідок обсягу дій. Не зупиняйся до 80-го контакту.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel mb-4">
+                        <h3>Воронка продажів</h3>
+                        <div class="funnel-container mt-4">
+                            <div class="funnel-step primary">
+                                <div class="funnel-value">80</div>
+                                <div class="funnel-label">Холодних DM</div>
+                            </div>
+                            <div class="funnel-arrow">→</div>
+                            <div class="funnel-step secondary">
+                                <div class="funnel-value">40</div>
+                                <div class="funnel-label">Відео записано</div>
+                            </div>
+                            <div class="funnel-arrow">→</div>
+                            <div class="funnel-step warning">
+                                <div class="funnel-value">8</div>
+                                <div class="funnel-label">Теплих відповідей</div>
+                            </div>
+                            <div class="funnel-arrow">→</div>
+                            <div class="funnel-step success">
+                                <div class="funnel-value">2</div>
+                                <div class="funnel-label">Закриті угоди</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2-col mb-4">
+                        <div class="panel">
+                            <h3>🎯 ІДЕАЛЬНИЙ КЛІЄНТ (ICP)</h3>
+                            <ul class="key-value-list mt-3" data-editable="strat_icp_list">
+                                <li><span>Ніша:</span> <strong>Преміум автодетейлінг</strong></li>
+                                <li><span>Послуги:</span> <strong>PPF, кераміка, автозвук</strong></li>
+                                <li><span>Ср. чек:</span> <strong>$1000–$3500+</strong></li>
+                                <li><span>Pain:</span> <strong>Втрата вечірніх лідів в IG</strong></li>
+                                <li><span>ЛПР:</span> <strong>Власник (1 людина)</strong></li>
+                                <li><span>Канал:</span> <strong>Instagram → Telegram</strong></li>
+                                <li><span>Джерело:</span> <strong>Google Maps + IG</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="panel border-danger">
+                            <h3 class="text-danger">🔴 Фільтр (RED FLAGS)</h3>
+                            <p class="text-secondary text-small mt-1 mb-3">Якщо є хоча б один — ПРОПУСКАЄМО ліда.</p>
+
+                            <div class="red-flag-item">
+                                <div class="rf-icon">⛔</div>
+                                <div>
+                                    <strong>Мертвий ефір</strong>
+                                    <p>Немає нових постів/Stories, нуль коментарів. Нема трафіку.</p>
+                                </div>
+                            </div>
+                            <div class="red-flag-item">
+                                <div class="rf-icon">💸</div>
+                                <div>
+                                    <strong>Гаражна економіка</strong>
+                                    <p>В профілі тільки дешеві послуги (звичайна мийка, пилосос).</p>
+                                </div>
+                            </div>
+                            <div class="red-flag-item">
+                                <div class="rf-icon">🏰</div>
+                                <div>
+                                    <strong>Цифрова фортеця</strong>
+                                    <p>Вже стоїть лінк на дорогий сайт із CRM та календарем.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout callout-warning mb-4">
+                        <div class="callout-icon">🔥</div>
+                        <div class="callout-content">
+                            <h4>ПРОТОКОЛ ПРОГРІВАННЯ (Перед DM)</h4>
+                            <ol class="mt-2 text-small">
+                                <li>Підписатись на студію</li>
+                                <li>Лайкнути 2–3 останніх поста</li>
+                                <li>Залишити 1 коментар <strong>по суті</strong> (напр: "чистий перехід на бампері 👌")
+                                </li>
+                                <li>Зачекати 24–48 годин</li>
+                                <li><strong>ТІЛЬКИ ТОДІ — писати DM</strong></li>
+                            </ol>
+                            <p class="text-danger mt-2 text-small">⚠️ Без прогрівання ваше повідомлення летить у
+                                "Запити" і його ніхто не побачить.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="mb-3">Продуктова матриця</h3>
+                    <div class="products-grid">
+                        <div class="product-card focus">
+                            <div class="product-badge">ЗАРАЗ ПРОДАЄМО</div>
+                            <h4>🟣 Автопілот Записів</h4>
+                            <div class="price">$250</div>
+                            <p>Лендінг + Telegram-бот + AI-фото<br>(Захоплення нічних лідів)</p>
+                            <div class="product-footer">Delivery: 48 годин</div>
+                        </div>
+                        <div class="product-card faded">
+                            <div class="product-badge secondary">DOWNSELL</div>
+                            <h4>Візуальний Бустер</h4>
+                            <div class="price">$150–$200</div>
+                            <p>15 AI-фото авто + 3 Reels<br>(Монетизація тих, хто має сайт)</p>
+                            <div class="product-footer">Delivery: 3-5 днів</div>
+                        </div>
+                        <div class="product-card faded">
+                            <div class="product-badge secondary">UPSELL</div>
+                            <h4>Цифрова Монополія</h4>
+                            <div class="price">$800–$1200+</div>
+                            <p>SEO-сайт + CRM + SMS + Відео<br>(Масштабування гарячих клієнтів)</p>
+                            <div class="product-footer">Delivery: 2-3 тижні</div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- TAB 3: SCRIPTS -->
+                <section id="tab-scripts" class="tab-section">
+
+                    <div class="grid-2-col">
+                        <!-- Left Col: DM Scripts -->
+                        <div>
+                            <div class="panel mb-4">
+                                <div class="flex-between mb-3">
+                                    <h3>Крок 1: Гачок (DM)</h3>
+                                    <button class="btn btn-sm btn-outline copy-btn" data-target="script-1">
+                                        📋 Скопіювати
+                                    </button>
+                                </div>
+                                <div class="script-block" id="script-1">
+                                    Вітаю! Бачив ваш проєкт з <span class="highlight">[PPF на Porsche]</span> — дуже
+                                    чисто зроблено, стиків практично не видно.
+                                    <br><br>
+                                    Звернув увагу, що запис у вас іде через Дірект, і записав коротке відео (хвилина)
+                                    спеціально про ваш профіль: як не втрачати тих, хто пише після робочого часу.
+                                    Скинути?
+                                </div>
+
+                                <details class="accordion mt-3">
+                                    <summary>💡 Правила персоналізації</summary>
+                                    <div class="accordion-content text-small">
+                                        <ul class="rules-list">
+                                            <li>⏱️ Витрать 30 секунд на останні 3-4 пости.</li>
+                                            <li>🔍 Знайди конкретику: колір авто, послуга, результат.</li>
+                                            <li>🗣️ Говори як детейлер:</li>
+                                            <li class="success">✅ "чисто зроблено" | "стиків не видно" | "блиск як з
+                                                заводу"</li>
+                                            <li class="danger">❌ "рівень 🔥" | "потужно" | "круті роботи" (шаблон!)</li>
+                                        </ul>
+                                    </div>
+                                </details>
+                            </div>
+
+                            <div class="panel mb-4">
+                                <div class="flex-between mb-3">
+                                    <h3>Крок 2: Відправка відео</h3>
+                                    <button class="btn btn-sm btn-outline copy-btn" data-target="script-2">
+                                        📋 Скопіювати
+                                    </button>
+                                </div>
+                                <div class="script-block" id="script-2">
+                                    Тримайте: <span class="highlight">[Лінк на Loom]</span>. 60 секунд, по суті.
+                                    <br><br>
+                                    Якщо зацікавить — напишіть «давай», і за 10 хв поясню деталі і ціну.
+                                </div>
+                            </div>
+
+                            <div class="panel">
+                                <h3>Банк компліментів</h3>
+                                <p class="text-small text-secondary mb-3">Клікни щоб скопіювати</p>
+                                <div class="compliments-list" id="compliments-list">
+                                    <!-- Rendered via JS -->
+                                </div>
+                                <div class="add-compliment-form mt-3">
+                                    <input type="text" id="new-compliment"
+                                        placeholder="Нова деталь (напр. ідеальний підворот)..." class="input flex-1">
+                                    <button id="btn-add-compliment" class="btn btn-primary">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Col: Video Scenario -->
+                        <div>
+                            <div class="panel h-100">
+                                <h3 class="mb-4">🎬 Сценарій відеоаудиту (Loom, 60s)</h3>
+
+                                <div class="checklist box-bg mb-4 text-small">
+                                    <strong>ЧЕК-ЛИСТ ПЕРЕД ЗАПИСОМ:</strong>
+                                    <label class="checkbox-item mt-2"><input type="checkbox" class="temp-check"><span
+                                            class="checkmark"></span>Відкрито їхній IG</label>
+                                    <label class="checkbox-item"><input type="checkbox" class="temp-check"><span
+                                            class="checkmark"></span>Є конкретна деталь для компліменту</label>
+                                    <label class="checkbox-item"><input type="checkbox" class="temp-check"><span
+                                            class="checkmark"></span>Відкрито шаблон міні-сторінки</label>
+                                    <label class="checkbox-item"><input type="checkbox" class="temp-check"><span
+                                            class="checkmark"></span>Loom працює</label>
+                                </div>
+
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <div class="time-badge">0:00–0:08</div>
+                                        <div class="timeline-content">
+                                            <div class="screen-label">📺 Їхній Instagram</div>
+                                            <p>"[Ім'я], дякую що відкрили. Одразу до суті — ми зараз на вашій сторінці,
+                                                і я хочу показати одну річ, яка може приносити вам додаткових клієнтів."
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item highlight">
+                                        <div class="time-badge danger">0:08–0:25</div>
+                                        <div class="timeline-content">
+                                            <div class="screen-label">📺 Їхній Instagram (Pain 🔥)</div>
+                                            <p>"У вас класний контент, який викликає емоцію. Уявіть: людина дивиться ось
+                                                цей пост про [послуга] о десятій вечора. Вона на емоціях хоче записатися
+                                                і пише в Дірект. Але робочий день закінчився. Поки настане ранок — її
+                                                емоційний імпульс згасне, або вона напише конкурентам."</p>
+                                            <small class="text-danger mt-1 block">⚠️ Ідеальний блок. Не
+                                                змінювати.</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item">
+                                        <div class="time-badge">0:25–0:45</div>
+                                        <div class="timeline-content">
+                                            <div class="screen-label">📺 Шаблон міні-сторінки (Рішення)</div>
+                                            <p>"Ось що ми пропонуємо. В шапку профілю ставиться посилання на ось таку
+                                                міні-сторінку. [показати мишкою] Тут — галерея робіт, послуги і форма
+                                                запису. Клієнт о 1-й ночі натискає, залишає номер — і заявка за секунду
+                                                прилітає вам в Телеграм. Без адміна, автоматично."</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item">
+                                        <div class="time-badge">0:45–0:60</div>
+                                        <div class="timeline-content">
+                                            <div class="screen-label">📺 Шаблон (CTA)</div>
+                                            <p>"Тобто навіть коли студія зачинена — ви збираєте контакти. Зважаючи на
+                                                ваші чеки, 1 збережений клієнт окупить цю штуку. Якщо цікаво — напишіть
+                                                мені «давай» в Дірект, поясню деталі. Дякую!"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- TAB 4: RESEARCH -->
+                <section id="tab-research" class="tab-section">
+
+                    <h3 class="mb-4">Верифіковані ринкові дані</h3>
+                    <p class="text-secondary mb-4">Всі тези перевірені незалежним пошуком (Березень 2026).</p>
+
+                    <div class="accordion-group mb-5">
+                        <details class="accordion panel-accordion">
+                            <summary>
+                                <div class="flex-align">
+                                    <span class="badge success mr-3">✅ Підтверджено</span>
+                                    <strong>Теза 1: Чеки детейлінгу $500–$2200+</strong>
+                                </div>
+                            </summary>
+                            <div class="accordion-content">
+                                <ul class="mb-2">
+                                    <li>Кераміка: <strong>$500–$1200</strong> (залежно від класу авто)</li>
+                                    <li>PPF часткове: <strong>$480–$700</strong></li>
+                                    <li>PPF повне: від <strong>$2200</strong></li>
+                                </ul>
+                                <small class="text-secondary">Джерела: carstar.com.ua, viplifetuning.kiev.ua,
+                                    vrs.kyiv.ua</small>
+                            </div>
+                        </details>
+
+                        <details class="accordion panel-accordion">
+                            <summary>
+                                <div class="flex-align">
+                                    <span class="badge success mr-3">✅ Підтверджено</span>
+                                    <strong>Теза 2: Відео аутріч має 3-16x вищу ефективність</strong>
+                                </div>
+                            </summary>
+                            <div class="accordion-content">
+                                <ul class="mb-2">
+                                    <li>Персоналізоване відео: <strong>3x response rate</strong> (personaliz.ai)</li>
+                                    <li>Відео до 30 сек: <strong>+40% response</strong> (YouTube research)</li>
+                                    <li>CTR відео: <strong>16x вище за текст</strong> (close.com)</li>
+                                    <li>Кейс: 7% reply → 15 зустрічей → $30K за 2 тижні</li>
+                                </ul>
+                            </div>
+                        </details>
+
+                        <details class="accordion panel-accordion">
+                            <summary>
+                                <div class="flex-align">
+                                    <span class="badge success mr-3">✅ Підтверджено</span>
+                                    <strong>Теза 3: Цифровізація малого бізнесу — лише на старті</strong>
+                                </div>
+                            </summary>
+                            <div class="accordion-content">
+                                <ul class="mb-2">
+                                    <li>Середня цифрова зрілість МСП: <strong>2.49/5</strong> (Кабмін)</li>
+                                    <li><strong>60%</strong> підприємств: базовий рівень (соцмережі + банкінг)</li>
+                                    <li>Лише 10% використовують інновації та автоматизацію</li>
+                                </ul>
+                                <small class="text-secondary">Джерело: kmu.gov.ua, ResearchGate</small>
+                            </div>
+                        </details>
+
+                        <details class="accordion panel-accordion">
+                            <summary>
+                                <div class="flex-align">
+                                    <span class="badge success mr-3">✅ Підтверджено</span>
+                                    <strong>Теза 4: Запис через IG Direct втрачає клієнтів</strong>
+                                </div>
+                            </summary>
+                            <div class="accordion-content">
+                                <ul class="mb-2">
+                                    <li>"Повідомлення загубляються серед діалогів" (CRM-провайдери)</li>
+                                    <li>"Очікування відповіді > 1 год → клієнт іде до конкурентів"</li>
+                                </ul>
+                                <small class="text-secondary">Джерело: nethunt.ua, lanet.click</small>
+                            </div>
+                        </details>
+
+                        <details class="accordion panel-accordion">
+                            <summary>
+                                <div class="flex-align">
+                                    <span class="badge success mr-3">✅ Підтверджено</span>
+                                    <strong>Теза 5: $250 — це дешевше ринку з ROI 300%+</strong>
+                                </div>
+                            </summary>
+                            <div class="accordion-content">
+                                <ul class="mb-2">
+                                    <li>Ціна фрілансера за простий лендінг: <strong>$100–$500</strong></li>
+                                    <li>Агенція: $1500+</li>
+                                    <li>Один врятований лід ($1000 чек) = <strong>ROI 300%</strong></li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="grid-2-col">
+                        <div class="panel">
+                            <h3>Суміжні ніші (для масштабування)</h3>
+                            <div class="mt-3">
+                                <strong>💅 Салони краси (Преміум)</strong>
+                                <p class="text-small text-secondary mb-2">"Дуже легко" продати. Вже є культура платити
+                                    за софт ($1200–$2200/рік за Altegio/BeautyPro). Ваша ціна для них смішна.</p>
+
+                                <strong>🐾 Вет. клініки (Приватні)</strong>
+                                <p class="text-small text-secondary mb-2">Біль 9/10 (нічні виклики). Але дуже
+                                    консервативні. Потрібен інший, більш "медичний" підхід до продажів.</p>
+
+                                <strong>🏗️ Будівельні компанії</strong>
+                                <p class="text-small text-secondary">Величезний LTV клієнта. Найкраще продавати "Цифрову
+                                    монополію" ($1200+).</p>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <h3>Конкуренти (Що клієнт може вам сказати)</h3>
+                            <div class="mt-3">
+                                <p><strong>"А чим це краще за безкоштовний Taplink?"</strong></p>
+                                <p class="text-small text-secondary mb-3">Відповідь: Taplink — це глуха візитка. Людина
+                                    перейшла і закрила. Наш віджет — це капкан для ліда. Клієнт вводить номер о 2:00
+                                    ночі — і бот МИТТЄВО будить вас у Telegram.</p>
+
+                                <p><strong>"У нас є Beauty Pro / Altegio"</strong></p>
+                                <p class="text-small text-secondary">Відповідь: Це чудові системи для обліку складів і
+                                    візитів. Але вони не створюють WOW-ефекту перед записом і вимагають від клієнта
+                                    розбиратися в нудному календарі. Ми робимо вітрину-галерею в 2 кліки.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- TAB 5: ROADMAP -->
+                <section id="tab-roadmap" class="tab-section">
+
+                    <div class="flex-between mb-4">
+                        <h2>План дій (Roadmap)</h2>
+                        <button class="btn btn-sm btn-outline" id="btn-reset-roadmap">Скинути план</button>
+                    </div>
+
+                    <div class="roadmap-timeline">
+
+                        <!-- Phase 0 -->
+                        <div class="timeline-step">
+                            <div class="timeline-node" id="node-phase0">
+                                <div class="node-inner"></div>
+                            </div>
+                            <div class="timeline-line">
+                                <div class="line-fill" id="line-fill-phase0"></div>
+                            </div>
+                            <div class="panel mb-4 phase-panel timeline-content">
+                                <div class="flex-between mb-2">
+                                    <h3>Фаза 0: Підготовка ⚙️</h3>
+                                    <span class="badge" id="phase0-pct">0%</span>
+                                </div>
+                                <div class="progress-track mb-3">
+                                    <div class="progress-fill" id="phase0-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="checklist" id="list-phase0">
+                                    <!-- JS Will Render Checkboxes Here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 1 -->
+                        <div class="timeline-step">
+                            <div class="timeline-node" id="node-phase1">
+                                <div class="node-inner"></div>
+                            </div>
+                            <div class="timeline-line">
+                                <div class="line-fill" id="line-fill-phase1"></div>
+                            </div>
+                            <div class="panel mb-4 phase-panel timeline-content">
+                                <div class="flex-between mb-2">
+                                    <h3>Фаза 1: Перші контакти (Тиждень 1–2) 🎯</h3>
+                                    <span class="badge" id="phase1-pct">0%</span>
+                                </div>
+                                <div class="progress-track mb-3">
+                                    <div class="progress-fill" id="phase1-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="checklist" id="list-phase1"></div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2 -->
+                        <div class="timeline-step">
+                            <div class="timeline-node" id="node-phase2">
+                                <div class="node-inner"></div>
+                            </div>
+                            <div class="timeline-line">
+                                <div class="line-fill" id="line-fill-phase2"></div>
+                            </div>
+                            <div class="panel mb-4 phase-panel timeline-content">
+                                <div class="flex-between mb-2">
+                                    <h3>Фаза 2: Набір обороту (Тиждень 2–3) 🚀</h3>
+                                    <span class="badge" id="phase2-pct">0%</span>
+                                </div>
+                                <div class="progress-track mb-3">
+                                    <div class="progress-fill" id="phase2-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="checklist" id="list-phase2"></div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3 -->
+                        <div class="timeline-step">
+                            <div class="timeline-node" id="node-phase3">
+                                <div class="node-inner"></div>
+                            </div>
+                            <!-- No timeline line for the last element, but keeping structure for consistency, we'll hide it in CSS -->
+                            <div class="timeline-line is-last"></div>
+                            <div class="panel phase-panel timeline-content">
+                                <div class="flex-between mb-2">
+                                    <h3>Фаза 3: Закриття (Тиждень 3–4) 💰</h3>
+                                    <span class="badge success" id="phase3-pct">0%</span>
+                                </div>
+                                <div class="progress-track mb-3">
+                                    <div class="progress-fill bg-success" id="phase3-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="checklist" id="list-phase3"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- TAB 6: LEADS -->
+                <section id="tab-leads" class="tab-section">
+
+                    <div class="panel box-bg mb-4 text-center py-4">
+                        <h3 class="mb-3">База Лідів</h3>
+                        <a href="https://docs.google.com/spreadsheets/d/1VLIB_WJWXqkn4oZFTrQby2v_1iA0hI_VTeNx3G2B5UE/edit?usp=sharing"
+                            target="_blank" id="leads-sheet-btn" class="btn btn-primary btn-lg px-5">
+                            📊 Відкрити Google Sheets
+                        </a>
+                        <p class="text-small text-secondary mt-3">Посилання автоматично підключено до таблиці `Асистент
+                            КолдАутрич`</p>
+                    </div>
+
+                    <div class="grid-2-col">
+                        <!-- Left: Instructions & Counter -->
+                        <div>
+                            <div class="panel mb-4">
+                                <div class="flex-between">
+                                    <h3>Лічильник лідів</h3>
+                                    <div class="counter-control">
+                                        <button class="btn-icon" id="btn-lead-minus">-</button>
+                                        <span class="counter-value" id="val-leads-count">0</span>
+                                        <button class="btn-icon" id="btn-lead-plus">+</button>
+                                    </div>
+                                </div>
+                                <div class="progress-track mt-3">
+                                    <div class="progress-fill bg-accent" id="lead-progress-fill" style="width: 0%">
+                                    </div>
+                                </div>
+                                <div class="text-right text-small text-secondary mt-1">Ціль: 80</div>
+                            </div>
+
+                            <div class="panel">
+                                <h3>Інструкція пошуку</h3>
+                                <ul class="step-list mt-3">
+                                    <li><strong>Крок 1:</strong> Відкрий Google Maps</li>
+                                    <li><strong>Крок 2:</strong> Шукай "автодетейлінг [місто]", "PPF [місто]", "кераміка
+                                        [місто]"</li>
+                                    <li><strong>Крок 3:</strong> Перевір рейтинг (4.0+) та наявність сайту</li>
+                                    <li><strong>Крок 4:</strong> Знайди їхній Instagram (в мапах або пошуком IG)</li>
+                                    <li><strong>Крок 5:</strong> Пережени через 🔴 Фільтр (справа →)</li>
+                                    <li><strong>Крок 6:</strong> Якщо підходить — додай у Таблицю.</li>
+                                </ul>
+
+                                <div class="mt-4">
+                                    <strong>Активні міста:</strong>
+                                    <div class="chips-container mt-2" id="cities-container">
+                                        <!-- Rendered by JS -->
+                                    </div>
+                                    <div class="add-city-form mt-2">
+                                        <input type="text" id="new-city" placeholder="Додати місто..."
+                                            class="input input-sm">
+                                        <button id="btn-add-city" class="btn btn-sm btn-outline">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Interactive Filter -->
+                        <div>
+                            <div class="panel h-100">
+                                <h3 class="mb-4">🔴 Інтерактивний Фільтр</h3>
+                                <p class="text-secondary mb-4">Відповідай чесно. Один червоний сигнал — лід у смітник.
+                                </p>
+
+                                <div class="filter-question">
+                                    <p>1. Чи є свіжі пости (за останній місяць)?</p>
+                                    <div class="radio-group" id="q1">
+                                        <label><input type="radio" name="q1" value="yes"> Так, є життя</label>
+                                        <label><input type="radio" name="q1" value="no"> Ні, мертві (🔴 СТОП)</label>
+                                    </div>
+                                </div>
+
+                                <div class="filter-question mt-4">
+                                    <p>2. Чи продають преміум (PPF, кераміка)?</p>
+                                    <div class="radio-group" id="q2">
+                                        <label><input type="radio" name="q2" value="yes"> Так, високі чеки</label>
+                                        <label><input type="radio" name="q2" value="no"> Ні, тільки гаражна мийка (🔴
+                                            СТОП)</label>
+                                    </div>
+                                </div>
+
+                                <div class="filter-question mt-4">
+                                    <p>3. Чи <strong>НЕМАЄ</strong> у них крутого сайту з CRM?</p>
+                                    <div class="radio-group" id="q3">
+                                        <label><input type="radio" name="q3" value="yes"> Так, сайту немає /
+                                            слабкий</label>
+                                        <label><input type="radio" name="q3" value="no"> Ні, у них вже все круто (🔴
+                                            СТОП)</label>
+                                    </div>
+                                </div>
+
+                                <div class="filter-result mt-4" id="filter-result">
+                                    <!-- Result shown here -->
+                                    <div class="text-center text-secondary py-3">Оберіть всі відповіді...</div>
+                                </div>
+
+                                <button class="btn btn-outline w-100 mt-3" id="btn-reset-filter">Скинути фільтр</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- TAB 7: SETTINGS -->
+                <section id="tab-settings" class="tab-section">
+
+                    <div class="grid-2-col">
+                        <div class="panel">
+                            <h3 class="mb-4">Конфігурація</h3>
+
+                            <div class="form-group mb-4">
+                                <label>Дата старту та Дату фінішу спринту</label>
+                                <div class="flex-align gap-2 mb-2">
+                                    <span class="text-small" style="width: 50px;">Старт:</span>
+                                    <input type="date" id="input-start-date" class="input flex-1">
+                                </div>
+                                <div class="flex-align gap-2">
+                                    <span class="text-small" style="width: 50px;">Фініш:</span>
+                                    <input type="date" id="input-end-date" class="input flex-1">
+                                </div>
+                                <button class="btn btn-primary w-100 mt-3" id="btn-save-date">Оновити дати</button>
+                                <p class="text-small text-secondary mt-2">Таймер на Дашборді буде рахувати прогрес від
+                                    дати старту до дати фінішу.</p>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <h3 class="mb-4">Підключення до бази (Firebase)</h3>
+                            <p class="text-small text-secondary mb-3">Ваша панель уже містить зашитий код підключення до
+                                Firebase та автоматично завантажена в онлайн режимі. Всі дані миттєво синхронізуються.
+                            </p>
+
+                            <div class="callout callout-success">
+                                <div class="callout-icon">✅</div>
+                                <div class="callout-content">
+                                    <h4>База підключена автоматично</h4>
+                                    <p class="mt-1 text-small">Дані синхронізуються за допомогою проекту
+                                        `trojan-horse-dashboard-efeb1`.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel mt-4 border-danger">
+                        <h3 class="text-danger mb-3">Небезпечна зона</h3>
+                        <p class="text-secondary mb-4">Дії з цього блоку незворотні.</p>
+
+                        <div class="flex-align gap-3">
+                            <button class="btn btn-danger" id="btn-wipe-data">🗑️ Очистити всі дані</button>
+                            <span class="text-small text-secondary">Скидає всі метрики, галочки Roadmap, таймери та
+                                лічильники на нуль.</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/storage.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="js/roadmap.js"></script>
+    <script type="module" src="js/leads.js"></script>
+    <script type="module" src="js/scripts_behavior.js"></script>
+</body>
+
+</html>
